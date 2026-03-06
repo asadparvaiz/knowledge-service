@@ -28,12 +28,13 @@ class AnswerGenerator:
             source = item.get("source", "unknown")
             text = item.get("text", "")
             context_block.append(f"[{idx}] Source: {source}\n{text}")
+        joined_context = "\n\n".join(context_block)
 
         prompt = (
             "Use only the context below to answer the user question. "
             "When possible, cite source numbers like [1], [2].\n\n"
             f"Question:\n{query}\n\n"
-            f"Context:\n{'\n\n'.join(context_block)}"
+            f"Context:\n{joined_context}"
         )
 
         if self.client is None:
