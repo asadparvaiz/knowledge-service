@@ -43,6 +43,25 @@ GENERATION_MAX_TOKENS=800
 
 If you use another provider exposing OpenAI-compatible APIs, set `*_BASE_URL`, keys, and model names accordingly.
 
+## URL scraping TLS note
+
+If your network uses SSL interception or custom CA chains, URL ingestion may fail with certificate errors.
+
+Options:
+
+1. Preferred: provide your CA bundle file path:
+
+```env
+SCRAPER_VERIFY_TLS=true
+SCRAPER_CA_BUNDLE=/path/to/ca-bundle.pem
+```
+
+2. Temporary fallback (less secure):
+
+```env
+SCRAPER_VERIFY_TLS=false
+```
+
 ## Run (local)
 
 ```bash

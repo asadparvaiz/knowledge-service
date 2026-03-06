@@ -6,9 +6,14 @@ from urllib.parse import urldefrag, urljoin, urlparse
 import requests
 from bs4 import BeautifulSoup
 
+from app.config import settings
+
 
 def _fetch_html(url: str) -> str:
-    response = requests.get(url, timeout=20, headers={"User-Agent": "KnowledgeServiceBot/1.0"})
+    verify: bool | str = settings.scraper_verify_tls
+    if settings.scraper_ca_bundle:
+        verify = settings.scraper_ca_bundle
+    response = requests.get(url, timeout=20, headers={"User-Agent": "KnowledgeServiceBot/1.0"}, verify=verify)
     response.raise_for_status()
     return response.text
 

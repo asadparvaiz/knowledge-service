@@ -31,6 +31,8 @@ class Settings(BaseSettings):
     chunk_size: int = 1200
     chunk_overlap: int = 200
     max_url_chars: int = 200000
+    scraper_verify_tls: bool = True
+    scraper_ca_bundle: str = ""
 
     service_api_key: str = ""
 
