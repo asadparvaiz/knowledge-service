@@ -55,8 +55,23 @@ async def list_tenants():
 @app.post("/ingest/url", dependencies=[Depends(authorize_request)])
 async def ingest_url(payload: IngestUrlRequest):
     try:
-        logger.info("[ingest/url] tenant=%s url=%s", payload.tenant_id, payload.url)
-        result = svc.ingest_url(payload.tenant_id, payload.url)
+        logger.info(
+            "[ingest/url] tenant=%s url=%s crawl=%s depth=%s pages=%s same_domain_only=%s",
+            payload.tenant_id,
+            payload.url,
+            payload.crawl,
+            payload.max_depth,
+            payload.max_pages,
+            payload.same_domain_only,
+        )
+        result = svc.ingest_url(
+            payload.tenant_id,
+            payload.url,
+            crawl=payload.crawl,
+            max_depth=payload.max_depth,
+            max_pages=payload.max_pages,
+            same_domain_only=payload.same_domain_only,
+        )
         return result
     except Exception as error:
         raise HTTPException(status_code=400, detail=str(error))

@@ -7,6 +7,7 @@ Multi-tenant ingestion and retrieval service for chatbot/MCP knowledge grounding
 - Multi-tenant isolation by `tenant_id`
 - Ingest file inputs (`pdf`, `docx`, `txt`, `md`)
 - Ingest URL content (HTML extraction)
+- Optional recursive crawl for linked pages
 - Chunk + embed + store in Qdrant
 - Query endpoint for semantic retrieval
 
@@ -49,7 +50,7 @@ http://127.0.0.1:8090/ui
 UI supports:
 
 - create/list tenants
-- ingest URL
+- ingest URL (single page or crawl)
 - upload files
 - run semantic queries
 
@@ -91,6 +92,14 @@ Ingest URL:
 curl -X POST http://127.0.0.1:8090/ingest/url \
   -H 'Content-Type: application/json' \
   -d '{"tenant_id":"tenant-a","url":"https://example.com"}'
+```
+
+Ingest URL with crawl:
+
+```bash
+curl -X POST http://127.0.0.1:8090/ingest/url \
+  -H 'Content-Type: application/json' \
+  -d '{"tenant_id":"tenant-a","url":"https://example.com/docs","crawl":true,"max_depth":1,"max_pages":20,"same_domain_only":true}'
 ```
 
 Query:

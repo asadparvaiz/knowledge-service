@@ -7,7 +7,7 @@ from app.chunking import chunk_text
 from app.config import settings
 from app.embeddings import Embedder
 from app.extractors.file_extractor import extract_text_from_file
-from app.extractors.web_extractor import extract_text_from_url
+from app.extractors.web_extractor import crawl_site, extract_text_from_url
 from app.tenants import TenantStore
 from app.vector_store import VectorStore
 
@@ -33,10 +33,54 @@ class KnowledgeService:
         count = self.store.upsert_chunks(tenant_id, vectors, pieces, source, metadata or {})
         return {"tenant_id": tenant_id, "source": source, "chunks": count}
 
-    def ingest_url(self, tenant_id: str, url: str) -> dict:
-        text = extract_text_from_url(url, max_chars=settings.max_url_chars)
-        parsed = urlparse(url)
-        return self.ingest_text(tenant_id, source=url, text=text, metadata={"host": parsed.netloc, "kind": "url"})
+    def ingest_url(
+        self,
+        tenant_id: str,
+        url: str,
+        *,
+        crawl: bool = False,
+        max_depth: int = 1,
+        max_pages: int = 20,
+        same_domain_only: bool = True,
+    ) -> dict:
+        if not crawl:
+            text = extract_text_from_url(url, max_chars=settings.max_url_chars)
+            parsed = urlparse(url)
+            result = self.ingest_text(tenant_id, source=url, text=text, metadata={"host": parsed.netloc, "kind": "url"})
+            return {**result, "pages": 1, "crawl": False}
+
+        pages = crawl_site(
+            url,
+            max_chars=settings.max_url_chars,
+            max_depth=max_depth,
+            max_pages=max_pages,
+            same_domain_only=same_domain_only,
+        )
+        total_chunks = 0
+        ingested_pages = 0
+        for page in pages:
+            page_url = page.get("url", "")
+            page_text = page.get("text", "")
+            parsed = urlparse(page_url)
+            result = self.ingest_text(
+                tenant_id,
+                source=page_url,
+                text=page_text,
+                metadata={"host": parsed.netloc, "kind": "url", "root_url": url},
+            )
+            total_chunks += int(result.get("chunks", 0))
+            ingested_pages += 1
+
+        return {
+            "tenant_id": tenant_id,
+            "source": url,
+            "crawl": True,
+            "pages": ingested_pages,
+            "chunks": total_chunks,
+            "max_depth": max_depth,
+            "max_pages": max_pages,
+            "same_domain_only": same_domain_only,
+        }
 
     def ingest_file(self, tenant_id: str, file_path: Path) -> dict:
         text = extract_text_from_file(file_path)

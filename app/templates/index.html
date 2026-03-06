@@ -56,6 +56,23 @@
           </label>
           <button id="ingestUrl">Ingest URL</button>
         </div>
+        <div class="row">
+          <label>
+            Crawl Linked Pages
+            <select id="crawlEnabled">
+              <option value="false" selected>No (single page)</option>
+              <option value="true">Yes (crawl)</option>
+            </select>
+          </label>
+          <label>
+            Max Depth
+            <input id="maxDepth" type="number" min="0" max="5" value="1" />
+          </label>
+          <label>
+            Max Pages
+            <input id="maxPages" type="number" min="1" max="500" value="20" />
+          </label>
+        </div>
       </section>
 
       <section class="card">

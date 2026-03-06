@@ -72,10 +72,13 @@ document.getElementById("ingestUrl").addEventListener("click", async () => {
   try {
     const tenant_id = tenantSelectUrl.value;
     const url = document.getElementById("urlInput").value.trim();
+    const crawl = document.getElementById("crawlEnabled").value === "true";
+    const max_depth = Number(document.getElementById("maxDepth").value || "1");
+    const max_pages = Number(document.getElementById("maxPages").value || "20");
     const data = await request("/ingest/url", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tenant_id, url }),
+      body: JSON.stringify({ tenant_id, url, crawl, max_depth, max_pages, same_domain_only: true }),
     });
     log(data);
   } catch (e) { log(e.message); }
