@@ -37,6 +37,28 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8090
 - `POST /ingest/file` (multipart)
 - `POST /query`
 
+## MCP Integration
+
+In `mcp-python` set:
+
+```env
+DEFAULT_CONNECTOR_ID=knowledge
+KNOWLEDGE_SERVICE_URL=http://127.0.0.1:8090/query
+KNOWLEDGE_SERVICE_API_KEY=
+KNOWLEDGE_TOP_K=5
+```
+
+Then send completion with tenant context:
+
+```json
+{
+  "prompt": "What is your return policy?",
+  "context": {
+    "tenant_id": "tenant-a"
+  }
+}
+```
+
 ## Example
 
 Create tenant:
