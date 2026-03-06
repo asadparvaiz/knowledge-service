@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-docker compose exec knowledge-service python - <<'PY'
+docker compose exec -T knowledge-service python - <<'PY'
 import urllib.request
 
 for url in [
