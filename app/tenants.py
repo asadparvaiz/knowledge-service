@@ -45,3 +45,17 @@ class TenantStore:
         with self._connect() as conn:
             row = conn.execute("SELECT tenant_id FROM tenants WHERE tenant_id = ?", (tenant_id,)).fetchone()
         return row is not None
+
+    def list_tenants(self) -> list[dict]:
+        with self._connect() as conn:
+            rows = conn.execute(
+                "SELECT tenant_id, name, created_at FROM tenants ORDER BY created_at DESC"
+            ).fetchall()
+        return [
+            {
+                "tenant_id": row[0],
+                "name": row[1],
+                "created_at": row[2],
+            }
+            for row in rows
+        ]

@@ -3,8 +3,10 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
-from fastapi.responses import JSONResponse
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 import uvicorn
 
 from app.config import settings
@@ -17,11 +19,23 @@ logging.basicConfig(level=getattr(logging, settings.log_level.upper(), logging.I
 
 app = FastAPI(title="Knowledge Service", version="0.1.0")
 svc = KnowledgeService()
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+templates = Jinja2Templates(directory="app/templates")
 
 
 @app.get("/health")
 async def health():
     return {"ok": True}
+
+
+@app.get("/", include_in_schema=False)
+async def root() -> RedirectResponse:
+    return RedirectResponse(url="/ui")
+
+
+@app.get("/ui", response_class=HTMLResponse, include_in_schema=False)
+async def ui(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.post("/tenants", dependencies=[Depends(authorize_request)])
@@ -31,6 +45,11 @@ async def create_tenant(payload: TenantCreateRequest):
     except ValueError as error:
         raise HTTPException(status_code=409, detail=str(error))
     return result
+
+
+@app.get("/tenants", dependencies=[Depends(authorize_request)])
+async def list_tenants():
+    return {"tenants": svc.tenants.list_tenants()}
 
 
 @app.post("/ingest/url", dependencies=[Depends(authorize_request)])

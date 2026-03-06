@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Knowledge Service Admin</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Knowledge Service Admin</h1>
+        <p>Manage tenants, ingest content, and test retrieval.</p>
+      </header>
+
+      <section class="card">
+        <h2>Connection</h2>
+        <div class="row">
+          <label>
+            Base URL
+            <input id="baseUrl" type="text" value="" placeholder="http://127.0.0.1:8090" />
+          </label>
+          <label>
+            API Key (optional)
+            <input id="apiKey" type="password" placeholder="x-api-key" />
+          </label>
+          <button id="refreshTenants">Refresh Tenants</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Create Tenant</h2>
+        <div class="row">
+          <label>
+            Tenant ID
+            <input id="tenantId" type="text" placeholder="tenant-a" />
+          </label>
+          <label>
+            Name
+            <input id="tenantName" type="text" placeholder="Tenant A" />
+          </label>
+          <button id="createTenant">Create</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Ingest URL</h2>
+        <div class="row">
+          <label>
+            Tenant
+            <select id="tenantSelectUrl"></select>
+          </label>
+          <label>
+            URL
+            <input id="urlInput" type="text" placeholder="https://example.com" />
+          </label>
+          <button id="ingestUrl">Ingest URL</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Ingest File</h2>
+        <div class="row">
+          <label>
+            Tenant
+            <select id="tenantSelectFile"></select>
+          </label>
+          <label>
+            File
+            <input id="fileInput" type="file" />
+          </label>
+          <button id="ingestFile">Upload File</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Query</h2>
+        <div class="row">
+          <label>
+            Tenant
+            <select id="tenantSelectQuery"></select>
+          </label>
+          <label>
+            Top K
+            <input id="topK" type="number" min="1" max="25" value="5" />
+          </label>
+        </div>
+        <div class="row">
+          <label class="full">
+            Question
+            <textarea id="queryInput" rows="3" placeholder="What is the refund policy?"></textarea>
+          </label>
+          <button id="queryBtn">Run Query</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Output</h2>
+        <pre id="output"></pre>
+      </section>
+    </main>
+
+    <script src="/static/admin.js"></script>
+  </body>
+</html>

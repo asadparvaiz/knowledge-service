@@ -18,6 +18,7 @@ docker compose up -d --build
 
 Service: `http://127.0.0.1:8090`
 Qdrant: `http://127.0.0.1:6333`
+Admin UI: `http://127.0.0.1:8090/ui`
 
 ## Run (local)
 
@@ -36,6 +37,21 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8090
 - `POST /ingest/url`
 - `POST /ingest/file` (multipart)
 - `POST /query`
+
+## Admin UI
+
+Open:
+
+```bash
+http://127.0.0.1:8090/ui
+```
+
+UI supports:
+
+- create/list tenants
+- ingest URL
+- upload files
+- run semantic queries
 
 ## MCP Integration
 
