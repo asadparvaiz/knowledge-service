@@ -8,6 +8,7 @@ from app.config import settings
 from app.embeddings import Embedder
 from app.extractors.file_extractor import extract_text_from_file
 from app.extractors.web_extractor import crawl_site, extract_text_from_url
+from app.generation import AnswerGenerator
 from app.tenants import TenantStore
 from app.vector_store import VectorStore
 
@@ -16,6 +17,7 @@ class KnowledgeService:
     def __init__(self) -> None:
         self.tenants = TenantStore()
         self.embedder = Embedder()
+        self.generator = AnswerGenerator()
         self.store = VectorStore()
         self.upload_dir = Path("data/uploads")
         self.upload_dir.mkdir(parents=True, exist_ok=True)
@@ -91,12 +93,9 @@ class KnowledgeService:
         vector = self.embedder.embed([query])[0]
         points = self.store.search(tenant_id, vector, top_k)
         results = []
-        snippets = []
         for p in points:
             payload = p.payload or {}
             text = str(payload.get("text", ""))
-            if text:
-                snippets.append(text)
             results.append(
                 {
                     "source": str(payload.get("source", "unknown")),
@@ -105,5 +104,5 @@ class KnowledgeService:
                     "metadata": payload,
                 }
             )
-        answer = "\n\n".join(snippets[:3])
+        answer = self.generator.generate(query=query, contexts=results[: top_k or 5])
         return {"tenant_id": tenant_id, "query": query, "answer": answer, "results": results}

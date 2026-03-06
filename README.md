@@ -9,7 +9,7 @@ Multi-tenant ingestion and retrieval service for chatbot/MCP knowledge grounding
 - Ingest URL content (HTML extraction)
 - Optional recursive crawl for linked pages
 - Chunk + embed + store in Qdrant
-- Query endpoint for semantic retrieval
+- Query endpoint for semantic retrieval + generated answers
 
 ## Run (Docker Compose)
 
@@ -20,6 +20,28 @@ docker compose up -d --build
 Service: `http://127.0.0.1:8090`
 Qdrant: `http://127.0.0.1:6333`
 Admin UI: `http://127.0.0.1:8090/ui`
+
+## Qwen setup (no OpenAI)
+
+Set `.env` to a Qwen-compatible API endpoint for embeddings and generation.
+
+Example with OpenRouter:
+
+```env
+EMBEDDING_PROVIDER=openai
+EMBEDDING_MODEL=text-embedding-3-small
+OPENAI_API_KEY=your_openrouter_key
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+
+GENERATION_PROVIDER=openai
+GENERATION_MODEL=qwen/qwen-2.5-14b-instruct
+GENERATION_API_KEY=your_openrouter_key
+GENERATION_BASE_URL=https://openrouter.ai/api/v1
+GENERATION_TEMPERATURE=0.2
+GENERATION_MAX_TOKENS=800
+```
+
+If you use another provider exposing OpenAI-compatible APIs, set `*_BASE_URL`, keys, and model names accordingly.
 
 ## Run (local)
 

@@ -17,6 +17,16 @@ class Settings(BaseSettings):
     embedding_model: str = "text-embedding-3-small"
     openai_api_key: str = ""
     openai_base_url: str = "https://api.openai.com/v1"
+    generation_provider: str = "openai"
+    generation_model: str = "qwen/qwen-2.5-14b-instruct"
+    generation_api_key: str = ""
+    generation_base_url: str = "https://openrouter.ai/api/v1"
+    generation_temperature: float = 0.2
+    generation_max_tokens: int = 800
+    generation_system_prompt: str = (
+        "You are a support assistant. Answer strictly using provided context. "
+        "If context is insufficient, say what is missing."
+    )
 
     chunk_size: int = 1200
     chunk_overlap: int = 200
