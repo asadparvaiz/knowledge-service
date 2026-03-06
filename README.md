@@ -84,3 +84,20 @@ curl -X POST http://127.0.0.1:8090/query \
   -H 'Content-Type: application/json' \
   -d '{"tenant_id":"tenant-a","query":"What does this site describe?","top_k":5}'
 ```
+
+## Demo script
+
+End-to-end tenant URL ingest + query:
+
+```bash
+./scripts/tenant_url_query_demo.sh
+```
+
+With overrides:
+
+```bash
+TENANT_ID=tenant-a \
+TARGET_URL=https://docs.example.com \
+QUESTION=\"How do I reset password?\" \
+./scripts/tenant_url_query_demo.sh
+```
