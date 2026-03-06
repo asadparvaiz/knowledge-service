@@ -1,0 +1,22 @@
+services:
+  knowledge-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: knowledge-service
+    env_file:
+      - ./.env
+    ports:
+      - "127.0.0.1:8090:8090"
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.15.4
+    container_name: qdrant
+    ports:
+      - "127.0.0.1:6333:6333"
+    volumes:
+      - ./data/qdrant:/qdrant/storage
+    restart: unless-stopped

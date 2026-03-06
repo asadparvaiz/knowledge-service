@@ -1,0 +1,29 @@
+[project]
+name = "knowledge-service"
+version = "0.1.0"
+description = "Multi-tenant document and web ingestion service with vector search"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.116.0",
+  "uvicorn[standard]>=0.35.0",
+  "python-multipart>=0.0.20",
+  "pydantic-settings>=2.10.0",
+  "qdrant-client>=1.15.0",
+  "openai>=2.24.0",
+  "beautifulsoup4>=4.13.0",
+  "requests>=2.32.0",
+  "pypdf>=6.0.0",
+  "python-docx>=1.2.0"
+]
+
+[project.scripts]
+knowledge-service = "app.main:run"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
