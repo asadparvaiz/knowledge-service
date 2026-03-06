@@ -7,7 +7,9 @@ services:
     env_file:
       - ./.env
     ports:
-      - "127.0.0.1:8090:8090"
+      - "0.0.0.0:8090:8090"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - qdrant
     restart: unless-stopped
