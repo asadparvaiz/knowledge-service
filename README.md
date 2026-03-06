@@ -148,3 +148,9 @@ TARGET_URL=https://docs.example.com \
 QUESTION=\"How do I reset password?\" \
 ./scripts/tenant_url_query_demo.sh
 ```
+
+Check Ollama reachability from inside container:
+
+```bash
+./scripts/check_ollama_from_container.sh
+```
